@@ -8,7 +8,6 @@ module.exports = {
         musicUpload.single("audio")(req, res, (err) => {
             if (!err) {
                 return next(null, req)
-                //return res.status(201).json({ path: req.file.filename });
             }
             return res.status(400).json({ error: err.message });
         })
