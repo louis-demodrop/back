@@ -13,6 +13,8 @@ app.use(cookieParser())
 app.use(express.json());
 app.use(express.static("public"));
 
+const passportConfig = require('./middlewares/passport');
+
 const userRoute = require('./routes/user');
 const musicRoute = require('./routes/music');
 app.use('/api/user', userRoute);
