@@ -2,9 +2,12 @@ const router = require('express-promise-router')();
 const passport = require('passport');
 
 const passportJWT = passport.authenticate('jwt', { session: false })
-const { upload } = require('../controllers/music');
+const { upload, add, remove } = require('../controllers/music');
 
 router.route('/upload')
-    .post(passportJWT, upload)
+    .post(passportJWT, upload, add)
+
+router.route('/:id')
+    .delete(passportJWT, remove)
 
 module.exports = router;
