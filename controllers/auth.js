@@ -49,7 +49,7 @@ module.exports = {
       res.status(200).json({ success: true })
     },
     checkLoginStatus: (req, res) => {
-      let payload = { isConnect: false }
+      let payload = { isConnected: false }
       if (req.cookies['access_token']) {
         const token = req.cookies['access_token']
         const { sub } = JWT.verify(token, JWT_SECRET)
@@ -59,6 +59,6 @@ module.exports = {
     },
     logout: async (req, res) => {
       res.clearCookie('access_token')
-      res.json({ success: true })
+      res.status(200).json({ success: true })
     }
 }
