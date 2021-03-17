@@ -5,8 +5,9 @@ const audioStorage = multer.diskStorage({
         next(null, "public/audio");
     },
     filename: (req, res, next) => {
+        const { user: { _id }, body: { title } } = req
         const parts = res.mimetype.split("/");
-        next(null, `${res.fieldname}-${Date.now()}.${parts[1]}`);
+        next(null, `${_id}-${title}-${Date.now()}.${parts[1]}`);
     }
 });
 
