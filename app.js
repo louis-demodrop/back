@@ -1,5 +1,6 @@
-const dotenv = require('dotenv')
-dotenv.config()
+require('dotenv').config({ path: `./configs/${process.env.NODE_ENV}.env` })
+
+global.__basedir = __dirname;
 
 const express = require('express');
 const cors = require('cors');
@@ -10,15 +11,17 @@ const mongoose = require('mongoose');
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_ORIGIN,
     credentials: true
 }))
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(express.json());
-app.use(express.static("public"));
 
 const passportConfig = require('./middlewares/passport');
+
+const passportJWT = require('passport').authenticate('jwt', { session: false })
+app.use('/tracks', [passportJWT, express.static('public/audio')]);
 
 const userRoute = require('./routes/user');
 const musicRoute = require('./routes/music');
@@ -30,7 +33,7 @@ app.get('/api', (req, res) => res.send('Demodrop Api v1'));
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("Connected to database.")
-        app.listen(8000, () => console.log("Back end is running on PORT 8000"));
+        app.listen(process.env.PORT, () => console.log(`Back end is running on PORT ${process.env.PORT}`));
     })
 
 module.exports = app;
