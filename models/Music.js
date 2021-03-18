@@ -10,9 +10,13 @@ const musicSchema = Schema({
         type: Object,
         required: true
     },
+    duration: {
+        type: Number,
+        required: true
+    },
     author: {
         type: Schema.Types.ObjectId,
-        ref: "User"
+        ref: "users"
     },
     created: {
         type: Date,
