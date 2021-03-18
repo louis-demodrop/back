@@ -2,7 +2,10 @@ const router = require('express-promise-router')();
 const passport = require('passport');
 
 const passportJWT = passport.authenticate('jwt', { session: false })
-const { upload, add, remove } = require('../controllers/music');
+const { findAll, upload, add, remove } = require('../controllers/music');
+
+router.route('/')
+    .get(passportJWT, findAll)
 
 router.route('/upload')
     .post(passportJWT, upload, add)

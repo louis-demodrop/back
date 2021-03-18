@@ -1,9 +1,18 @@
-const { Types: { ObjectId } } = require('mongoose')
+const { Types: { ObjectId } } = require('mongoose');
+const { getAudioDurationInSeconds } = require('get-audio-duration');
 
 const { musicUpload } = require('../middlewares/multer');
 const Music = require('../models/Music');
 
 module.exports = {
+    findAll: async (req, res) => {
+        try {
+            const result = await Music.find({}).populate("author")
+            return res.status(200).send({ success: result })
+        } catch (error) {
+            return res.status(400).send({ error: error.message })
+        }
+    },
     upload: (req, res, next) => {
         musicUpload.single("audio")(req, res, (err) => {
             if (!err) {
@@ -15,12 +24,13 @@ module.exports = {
     add: async (req, res) => {
         const { title } = req.body;
         const { file } = req;
-        const { _id } = req.user
-        
+        const { _id } = req.user;
+        const duration = await getAudioDurationInSeconds(`${__basedir}/public/audio/${file.filename}`);
         try {
             const music = new Music({
                 title,
                 audio: file,
+                duration,
                 author: ObjectId(_id)
             });
     
