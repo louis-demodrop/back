@@ -2,6 +2,10 @@ require('dotenv').config({ path: `./configs/${process.env.NODE_ENV}.env` })
 
 global.__basedir = __dirname;
 
+const fs = require('fs');
+const path = require('path');
+const http = require('http');
+const https = require('https');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -31,10 +35,15 @@ app.use('/api/music', musicRoute);
 
 app.get('/api', (req, res) => res.send('Demodrop Api v1'));
 
+const key = fs.readFileSync(path.join(__dirname, 'cert', 'key.pem'));
+const cert =  fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'));
+const secureApp = https.createServer({ key, cert }, app)
+
 mongoose.connect(process.env.MONGO_URI, { useMongoClient: true })
     .then(() => {
         console.log("Connected to database.")
-        app.listen(process.env.PORT, () => console.log(`Back end is running on PORT ${process.env.PORT}`));
+        app.listen(8042, () => console.log('Back end is running on PORT 8042'));
+        secureApp.listen(process.env.PORT, () => console.log(`Secured back end is running on PORT ${process.env.PORT}`));
     })
     .catch(err => console.log(err))
 
