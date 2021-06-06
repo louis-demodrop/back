@@ -7,6 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose');
+mongoose.Promise = Promise;
 
 const app = express();
 
@@ -30,10 +31,11 @@ app.use('/api/music', musicRoute);
 
 app.get('/api', (req, res) => res.send('Demodrop Api v1'));
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URI, { useMongoClient: true })
     .then(() => {
         console.log("Connected to database.")
         app.listen(process.env.PORT, () => console.log(`Back end is running on PORT ${process.env.PORT}`));
     })
+    .catch(err => console.log(err))
 
 module.exports = app;
