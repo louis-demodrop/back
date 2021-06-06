@@ -35,8 +35,8 @@ app.use('/api/music', musicRoute);
 
 app.get('/api', (req, res) => res.send('Demodrop Api v1'));
 
-const key = fs.readFileSync(path.join(__dirname, 'cert', 'key.pem'));
-const cert =  fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'));
+const key = fs.readFileSync('/home/momo/key.pem');
+const cert =  fs.readFileSync('/home/momo/cert.pem');
 const secureApp = https.createServer({ key, cert }, app)
 
 mongoose.connect(process.env.MONGO_URI, { useMongoClient: true })
